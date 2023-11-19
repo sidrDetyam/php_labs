@@ -1,0 +1,15 @@
+version: '2'
+services:
+  webserver:
+    image: phpstorm/php-apache:7.4-xdebug2.9
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+#      - ./php.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    environment:
+      XDEBUG_CONFIG: 'idekey=PHPSTORM remote_host=172.17.0.1 remote_port=9000 remote_autostart=1 remote_enable=1 remote_mode=req remote_connect_back=0'
+      PHP_IDE_CONFIG: 'serverName=Docker'
+      COMPOSER_ALLOW_XDEBUG: 0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
