@@ -6,7 +6,35 @@ services:
       - "80:80"
     volumes:
       - ./:/var/www/html
-#      - ./php.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    #      - ./php.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    environment:
+      XDEBUG_CONFIG: 'idekey=PHPSTORM remote_host=172.17.0.1 remote_port=9000 remote_autostart=1 remote_enable=1 remote_mode=req remote_connect_back=0'
+      PHP_IDE_CONFIG: 'serverName=Docker'
+      COMPOSER_ALLOW_XDEBUG: 0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mysql_db:
+    image: mysql:8
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    volumes:
+      - ./dbdata:/var/lib/mysql/
+
+  php56:
+    build:
+      context: .
+      dockerfile: Dockerfile_php56
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
     environment:
       XDEBUG_CONFIG: 'idekey=PHPSTORM remote_host=172.17.0.1 remote_port=9000 remote_autostart=1 remote_enable=1 remote_mode=req remote_connect_back=0'
       PHP_IDE_CONFIG: 'serverName=Docker'
