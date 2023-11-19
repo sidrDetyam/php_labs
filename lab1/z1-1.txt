@@ -1,0 +1,136 @@
+
+1)
+select *
+from cust
+where snum = 1001
+
+2)
+select city, sname, snum, comm
+from sal
+
+3)
+select rating, cname
+from cust
+where city = 'San Jose'
+
+4)
+select DISTINCT snum
+from ord
+
+5)
+select sname, city
+from sal
+where comm > 0.11
+
+6)
+select *
+from cust
+where city <> 'Rome' and rating <= 200
+
+7)
+select *
+from ord
+where odate = '03-OCT-90' or odate = '05-OCT-90'
+
+select *
+from ord
+where odate in ('03-OCT-90', '05-OCT-90')
+
+8)
+select *
+from cust
+where cname between 'A%' and 'G%'
+
+9)
+select *
+from sal
+where lower(sname) like '%e%'
+
+10)
+select SUM(amt) as total_sum
+from ord
+where odate = '03-OCT-90'
+
+11)
+select SUM(amt) as total
+from ord
+where snum = 1001
+
+12)
+select snum, max(amt)
+from ord
+group by snum
+
+13)
+select *
+from cust
+where lower(cname) like 's%'
+order by cname
+limit 1
+
+14)
+select city, avg(comm)
+from sal
+group by city
+
+15)
+select onum, amt * 0.8 as amt_euro, sname, comm
+from ord
+         join sal on ord.snum = sal.snum
+where odate = '03-OCT-90'
+
+16)
+select onum, sname, cname
+from ord o
+join cust c on o.cnum = c.cnum
+join sal s on s.snum = o.snum
+where c.city in ('London', 'Rome')
+
+17)
+select s.sname, sum(o.amt) as total_amt, sum(o.amt) * s.comm as total_comm
+from sal s
+join ord o on o.snum = s.snum
+where str_to_date(o.odate, '%d-%b-%Y') < '1990-10-05'
+group by s.snum
+
+18)
+select o.onum, o.amt, sname, cname
+from ord o
+join sample.cust c on o.cnum = c.cnum
+join sample.sal s on c.snum = s.snum
+where s.city between 'L%' and 'R%' and
+      c.city between 'L%' and 'R%'
+
+19)
+select c1.cnum, c2.cnum
+from cust c1
+cross join cust c2
+where c1.cnum > c2.cnum and c1.snum = c2.snum
+
+20)
+select cname
+from cust
+where snum in (select snum
+               from sal
+               where comm < 0.13)
+
+21)
+create table sample.sal_copy as select * from sal;
+
+((select * from sal_copy) EXCEPT select * from sal)
+union all
+((select * from sal) EXCEPT select * from sal_copy);
+
+22)
+insert into sal_copy values (4000, 'Pool', 'Nsk', 0.12);
+insert into sal_copy values (4001, 'White', 'Bruh', 0.17);
+select * from sal_copy;
+delete from sal_copy where snum = 4001;
+select * from sal_copy;
+
+23)
+insert into sal_copy values (4002, 'qwer', 'vfr', 0.22);
+insert into sal_copy values (4003, 'asdf', 'hgds', 0.33);
+select * from sal_copy;
+update sal_copy set comm = comm * 2;
+select * from sal_copy;
